@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Registration</title>
+  <script type="text/javascript">
+       // MANUAL JAVASCRIPT
+       var data = [];
+       // var dikt = {};
+
+       function display(data, index=-987) {
+            // div.innerHTML = "";
+            if (index != -987){
+                var i = index
+                target = document.getElementById('records');
+                target.innerHTML = "";
+                var div = document.createElement('tr');
+                var s = "<td>"+data[i]["ID"]+"</td>"+"<td>"+data[i]["NAME"]+"</td>"+"<td>"+data[i]["SPEC"]+"</td>"+"<td>"+data[i]["RANK"]+"</td>"+"<td>"+data[i]["DAYS"]+" "+data[i]["START_TIME"]+" to "+data[i]["END_TIME"]+"</td>";
+                div.innerHTML = s;
+                target.appendChild(div);
+            }
+            else {
+                target = document.getElementById('records');
+                min = 0;
+                max = data.length;
+                target.innerHTML = "";
+                for (var i = min; i<max; i++){
+                    var div = document.createElement('tr');
+                    var s = "<td>"+data[i]["ID"]+"</td>"+"<td>"+data[i]["NAME"]+"</td>"+"<td>"+data[i]["SPEC"]+"</td>"+"<td>"+data[i]["RANK"]+"</td>"+"<td>"+data[i]["DAYS"]+" "+data[i]["START_TIME"]+" to "+data[i]["END_TIME"]+"</td>";
+                    div.innerHTML = s;
+                    target.appendChild(div);
+                }
+            }
+       }
+       function add(form_object) {
+           var dikt = {"ID": form_object.id.value, "NAME": form_object.name.value, 
+                        "RANK": form_object.rank.value, "SPEC": form_object.spec.value,
+                        "DAYS": form_object.days.value, "START_TIME": form_object.start_time.value, "END_TIME": form_object.end_time.value
+            };
+            data.push(dikt);
+            dikt = {};
+            display(data);
+       }
+       function remove(idx) {
+            var idx = idx.xremove.value;
+            alert(idx);
+            min = 0;
+            max = data.length;
+            for (var i = min; i<max; i++){
+                if (data[i]["ID"] == idx.toString()) {
+                    data.splice(i, 1);
+                }
+            }
+            display(data);
+       }
+       function myFunction(){
+            var min = 1,
+            max = 24,
+            select = document.getElementById('start');
+
+            for (var i = min; i<=max; i++){
+            var opt = document.createElement('option');
+            var _time_daylight = "";
+            var _time_figure = "";
+            _time_daylight = i < 12 ? 'AM' : 'PM';
+            _time_figure = i % 12 || 12;
+            if(i==24) {
+                _time_daylight = "AM";
+            }
+            opt.value = _time_figure + ":00 " + _time_daylight;
+            opt.innerHTML = _time_figure + ":00 " + _time_daylight;
+            select.appendChild(opt);
+            }
+            select = document.getElementById('end');
+
+            for (var i = min; i<=max; i++){
+            opt = document.createElement('option');
+            _time_daylight = "";
+            _time_figure = "";
+            _time_daylight = i < 12 ? 'AM' : 'PM';
+            _time_figure = i % 12 || 12;
+            if(i==24) {
+                _time_daylight = "AM";
+            }
+            opt.value = _time_figure + ":00 " + _time_daylight;
+            opt.innerHTML = _time_figure + ":00 " + _time_daylight;
+            select.appendChild(opt);
+            }
+       }
+       function search(query){
+            var query = query.xsearch.value;
+            alert(query);
+            min = 0;
+            max = data.length;
+            for (var i = min; i<max; i++){
+                objects = data[i];
+                if(objects["ID"] == query.toString()) {
+                    display(data, index=i);
+                }
+            }
+       }
+       function reset_records(){
+            data = [];
+            display(data);
+       }
+       function reset_filters(){
+            display(data);
+       }
+  </script>
+  <style type="text/css">
+      table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table, td, th {
+      border: 1px solid black;
+    }
+    body {
+        width: 50%;
+        margin: auto;
+        border: 1px solid black;
+        padding: 20px;
+    }
+    tr:nth-child(even) {
+        background-color: #eee;
+    }
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .button:hover{
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body onload="myFunction();">
+    <table style="margin-bottom: 20px;">
+        <thead>
+            <tr>
+                <th>Click the Display Button to retrieve all Doctors: <input type="submit" name="reset_filter" value="Display" onclick="reset_filters();" class="button" title="Display All Records"> <input type="submit" name="reset_data" value="Reset" onclick="reset_records();" class="button" title="Reset Records"> </th>
+            </tr>
+        </thead>
+    </table>
+    <table style="margin-bottom: 20px;">
+        <thead>
+            <tr style="background-color: pink;">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>Rank</th>
+                <th>Working Hours</th>
+            </tr>
+        </thead>
+        <tbody id="records">
+            
+        </tbody>
+    </table>
+        <table id="formTable">
+            <thead>
+                <tr>
+                    <th colspan="100">Fill in the following form to add Doctors:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <form method="POST" onsubmit="add(this); return false;">
+                <tr>
+                    <td><label>ID</label></td>
+                    <td><input type="text" name="id" required="true"></td>
+                </tr>
+                <tr>
+                    <td><label>Name</label></td>
+                    <td><input type="text" name="name" required="true"></td>
+                </tr>
+                <tr>
+                    <td><label>Speciality</label></td>
+                    <td><input type="text" name="spec" required="true"></td>
+                </tr>
+                <tr>
+                    <td><label>Rank</label></td>
+                    <td>
+                        <select name="rank" required="true">
+                            <option value="Specialist">Specialist</option>
+                            <option value="Consultant">Consultant</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="100">Working Hours</th>
+                </tr>
+                <tr>
+                    <td>Days</td>
+                    <td>
+                        <select name="days" required="true">
+                            <option value="Sun">Sunday</option>
+                            <option value="Mon">Monday</option>
+                            <option value="Tue">Tuesday</option>
+                            <option value="Wed">Wednesday</option>
+                            <option value="Thu">Thursday</option>
+                            <option value="Fri">Friday</option>
+                            <option value="Sat">Saturday</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Starting Time</td>
+                    <td>
+                        <select name="start_time" id="start" required="true">
+                            <option value="">---</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>End Time</td>
+                    <td>
+                        <select name="end_time" id="end" required="true">
+                            <option value="">---</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="100" style="text-align: center;"><input type="submit" name="sub" value="Add" class="button" title="Add Record"></td>
+                </tr>
+                </form>
+                <tr>
+                    <td>Delete by ID</td>
+                    <td>
+                        <form method="POST" onsubmit="remove(this);return false;">
+                            <input type="text" name="xremove" placeholder="Delete by ID" required="true">
+                            <input type="submit" name="remove_sub" value="Delete" class="button">
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Search by ID</td>
+                    <td>
+                        <form method="POST" onsubmit="search(this); return false;">
+                            <input type="text" name="xsearch" placeholder="Search By ID" required="true">
+                            <input type="submit" name="search_sub" value="Search" class="button">
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- ID&nbsp;&nbsp;<input type="text" name="id">
+        Name&nbsp;&nbsp;<input type="text" name="name">
+        Speciality&nbsp;&nbsp;<input type="text" name="spec">
+        RANK&nbsp;&nbsp;<select name="rank">
+            <option value="Specialist">Specialist</option>
+            <option value="Consultant">Consultant</option>
+        </select>
+        DAYS&nbsp;&nbsp;<select name="days">
+            <option value="Sun">Sunday</option>
+            <option value="Mon">Monday</option>
+            <option value="Tue">Tuesday</option>
+            <option value="Wed">Wednesday</option>
+            <option value="Thu">Thursday</option>
+            <option value="Fri">Friday</option>
+            <option value="Sat">Saturday</option>
+        </select>
+        START&nbsp;&nbsp;<select name="start_time" id="start">
+            <option value="">---</option>
+        </select>
+        END&nbsp;&nbsp;<select name="end_time" id="end">
+            <option value="">---</option>
+        </select><br>
+        <input type="submit" name="sub" value="Add">
+    </form> -->
+    <!-- <form method="POST" onsubmit="search(this); return false;">
+        <input type="text" name="xsearch" placeholder="Search By ID">
+        <input type="submit" name="search_sub" value="Search">
+    </form>
+    <form method="POST" onsubmit="remove(this);return false;">
+        <input type="text" name="xremove" placeholder="Delete by ID">
+        <input type="submit" name="remove_sub" value="Delete">
+    </form>
+        <input type="submit" name="reset_filter" value="Reset Filter" onclick="reset_filters();">
+        <input type="submit" name="reset_data" value="Reset Records" onclick="reset_records();">
+ -->
+</body>
+</html>
